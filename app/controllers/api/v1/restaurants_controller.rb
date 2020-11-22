@@ -1,5 +1,5 @@
 class Api::V1::RestaurantsController < ApplicationController
-  before_action :get_restaurant, only: %i[show update delete]
+  before_action :get_restaurant, only: %i[show update destroy]
 
   def index
     @restaurants = Restaurant.all
@@ -29,8 +29,8 @@ class Api::V1::RestaurantsController < ApplicationController
     end
   end
 
-  def delete
-    @restaurant.delete
+  def destroy
+    @restaurant.destroy
   end
 
   private
