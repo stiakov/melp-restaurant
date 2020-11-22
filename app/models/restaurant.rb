@@ -1,5 +1,13 @@
 class Restaurant < ApplicationRecord
-  scope :nearby, -> (lat, lng, rad) { where("ST_DWithin(geom, ST_MakePoint(?,  ?)::geography::geometry, ?)", lat, lng, rad ) }
+  scope :nearby, -> (latitude, longitude, radius) { 
+    where(
+      "ST_DWithin(
+        ST_SetSrID(ST_MakePoint(lat, lng), 4326),
+        ST_SetSrID(ST_MakePoint(?, ?), 4326),
+        ?
+      )", latitude, longitude, radius
+    )
+  }
 
   def self.get_statistics(neighbors)
     ratings = neighbors.map { |item| item.rating }
