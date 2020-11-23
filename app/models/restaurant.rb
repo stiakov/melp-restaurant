@@ -11,8 +11,13 @@ class Restaurant < ApplicationRecord
 
   def self.get_statistics(neighbors)
     ratings = neighbors.map { |item| item.rating }
-    average = calculate_avg(ratings)
+    average = calculate_avg(ratings) || 0
     
+    if neighbors.empty?
+      zero = 0
+      return { count: zero, avg: zero, std: zero }
+    end
+
     statistics ={
       count: neighbors.size,
       avg: average,
@@ -36,9 +41,9 @@ class Restaurant < ApplicationRecord
   def self.calculate_std_deviation(values, average)
     squared_sum = 0
     values.each do |item|
-      squared_sum = (item - average) ** 2 
+      squared_sum = squared_sum + (item - average) ** 2 
     end
 
-    squared_sum.to_f / values.size
+    squared_sum.to_f / values.size || 0
   end
 end
